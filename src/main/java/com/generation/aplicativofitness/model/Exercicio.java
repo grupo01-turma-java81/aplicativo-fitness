@@ -1,9 +1,12 @@
 package com.generation.aplicativofitness.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -30,6 +33,10 @@ public class Exercicio {
     @NotBlank
     @Size(min = 3, max = 30)
     private String diaExercicio;
+    
+    @ManyToOne
+    @JsonIgnoreProperties("exercicio")
+    private Treino treino;
 
     public Long getId() {
 	return id;
@@ -69,6 +76,14 @@ public class Exercicio {
 
     public void setDiaExercicio(String diaExercicio) {
 	this.diaExercicio = diaExercicio;
+    }
+
+    public Treino getTreino() {
+        return treino;
+    }
+
+    public void setTreino(Treino treino) {
+        this.treino = treino;
     }
 
 }

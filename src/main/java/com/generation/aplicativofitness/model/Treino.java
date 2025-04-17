@@ -1,9 +1,16 @@
 package com.generation.aplicativofitness.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 
@@ -17,6 +24,10 @@ public class Treino {
 
     @Size(min = 3, max = 50)
     private String nome;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "treino", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties("treino")
+    private List<Exercicio> exercicios;
 
     public Long getId() {
 	return id;
@@ -32,6 +43,14 @@ public class Treino {
 
     public void setNome(String nome) {
 	this.nome = nome;
+    }
+
+    public List<Exercicio> getExercicios() {
+        return exercicios;
+    }
+
+    public void setExercicios(List<Exercicio> exercicios) {
+        this.exercicios = exercicios;
     }
 
 }

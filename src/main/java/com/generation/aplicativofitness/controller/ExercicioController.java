@@ -18,10 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.aplicativofitness.model.Exercicio;
 import com.generation.aplicativofitness.repository.ExercicioRepository;
-
+import com.generation.aplicativofitness.repository.TreinoRepository;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/exercicio")
@@ -29,24 +30,46 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class ExercicioController {
 
     @Autowired
+    private final TreinoRepository treinoRepository;
+
+    @Autowired
     private ExercicioRepository exercicioRepository;
+
+    ExercicioController(TreinoRepository treinoRepository) {
+        this.treinoRepository = treinoRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<Exercicio>> getAll() {
 	return ResponseEntity.ok(exercicioRepository.findAll());
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Exercicio> getById(@PathVariable Long id) {
+        return exercicioRepository.findById(id)
+        	.map(resposta -> ResponseEntity.ok(resposta))
+        	.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
     @PostMapping
     public ResponseEntity<Exercicio> post(@Valid @RequestBody Exercicio exercicio) {
-	return ResponseEntity.status(HttpStatus.CREATED).body(exercicioRepository.save(exercicio));
+	if (treinoRepository.existsById(exercicio.getTreino().getId())) {
+	    return ResponseEntity.status(HttpStatus.CREATED)
+		.body(exercicioRepository.save(exercicio));
+	}
+	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Treino não Encontrado", null);
     }
 
     @PutMapping
     public ResponseEntity<Exercicio> put(@Valid @RequestBody Exercicio exercicio) {
-	return exercicioRepository.findById(exercicio.getId())
-		.map(resposta -> ResponseEntity.status(HttpStatus.OK)
-			.body(exercicioRepository.save(exercicio)))
-		.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	if (exercicioRepository.existsById(exercicio.getId())) {
+	    if (treinoRepository.existsById(exercicio.getTreino().getId())) {
+        	    return ResponseEntity.status(HttpStatus.OK)
+        		    .body(exercicioRepository.save(exercicio));
+	    }
+	    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Treino não encontrado", null);
+	}
+	return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -35,7 +35,19 @@ public class TreinoController {
     public ResponseEntity<List<Treino>> getAll() {
 	return ResponseEntity.ok(treinoRepository.findAll());
     }
-
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Treino> getById(@PathVariable Long id) {
+        return treinoRepository.findById(id)
+        	.map(resposta -> ResponseEntity.ok(resposta))
+        	.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+    
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<List<Treino>> getByNome(@PathVariable String nome) {
+	return ResponseEntity.ok(treinoRepository.findAllByNomeContainingIgnoreCase(nome));
+    }
+    
     @PostMapping
     public ResponseEntity<Treino> post(@Valid @RequestBody Treino treino) {
 	return ResponseEntity.status(HttpStatus.CREATED).body(treinoRepository.save(treino));

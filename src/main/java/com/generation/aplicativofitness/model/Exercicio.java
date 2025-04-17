@@ -20,7 +20,7 @@ public class Exercicio {
     private Long id;
 
     @NotBlank
-    @Size(max = 130)
+    @Size(min = 1, max = 130 )
     private String nome;
 
     @Size(min = 20, max = 200)

@@ -27,7 +27,7 @@ public class Exercicio {
     private String descricao;
 
     @NotBlank
-    @Size(min = 10, max = 100)
+    @Size(max = 100)
     private String regiaoMuscular;
 
     @NotBlank

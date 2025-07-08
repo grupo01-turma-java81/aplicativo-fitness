@@ -67,10 +67,10 @@ Siga os passos abaixo para executar o projeto localmente:
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/grupo01-turma-java81/aplicativo-fitness.git
+git clone https://github.com/grupo01-turma-java81/repzone-backend.git
 
 # 2. Acesse a pasta do projeto
-cd aplicativo-fitness
+cd repzone-backend
 
 # 3. Execute o projeto com sua IDE (IntelliJ, Eclipse, VS Code) ou via Maven/Gradle
 ```
